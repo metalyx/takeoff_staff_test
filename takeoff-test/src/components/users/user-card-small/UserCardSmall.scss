@@ -1,0 +1,16 @@
+.user-card-small__wrapper {
+  width: 500px;
+  padding-left: 15px;
+  padding-top: 10px;
+
+  border: 1px solid gray;
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  margin-bottom: 10px;
+}
+
+.user-card-small__wrapper:hover {
+  background: lavender;
+}

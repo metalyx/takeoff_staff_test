@@ -1,0 +1,29 @@
+.login-page__wrapper {
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+
+  span {
+    display: block;
+  }
+
+  .login-page__form {
+    
+    width: 320px;
+
+    input {
+      border: 1px solid gray;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    button {
+      height: 40px;
+    }
+  }
+}

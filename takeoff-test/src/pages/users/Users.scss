@@ -1,0 +1,41 @@
+.users__wrapper {
+
+  width: 97vw;
+  max-width: 100%;
+  padding-left: 25px;
+  padding-top: 10px;
+  box-sizing: border-box;
+
+  .users__buttons {
+    margin: 10px 0;
+
+    .buttons__description {
+      display: block;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .buttons__wrapper {
+      button {
+        width: 100px;
+        height: 35px;
+        background: blue;
+
+      }
+    }
+  }
+
+
+  .users__columns {
+    width: 100%;
+    display: flex;
+
+    .users__left-column {
+      width: 500px;
+    }
+    .users__right-column {
+      width: calc(90% - 500px);
+    }
+  }
+}
