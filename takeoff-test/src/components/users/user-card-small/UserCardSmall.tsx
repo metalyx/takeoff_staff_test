@@ -8,11 +8,20 @@ interface iUserCardSmall {
   email: string;
   companyName: string;
   style?: React.CSSProperties;
+  className?: string;
 }
 
-const UserCardSmall: React.FC<iUserCardSmall> = ({ onClick, name, email, companyName, style, id }) => {
+const UserCardSmall: React.FC<iUserCardSmall> = ({
+  onClick,
+  name,
+  email,
+  companyName,
+  style,
+  id,
+  className
+}) => {
   return (
-    <div className='user-card-small__wrapper' onClick={onClick} style={style}>
+    <div className={`user-card-small__wrapper ${className}`} onClick={onClick} style={style}>
       <ul>
         <li>ID: <span>{id}</span></li>
         <li>Name: <span>{name}</span></li>

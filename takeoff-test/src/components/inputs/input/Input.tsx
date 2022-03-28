@@ -15,15 +15,42 @@ interface iInput {
   required?: boolean;
 }
 
-const Input: React.FC<iInput> = ({ label, placeholder, name, id, type, disabled = false, value, onChange, style, required = false }) => {
+const Input: React.FC<iInput> = ({
+  label,
+  placeholder,
+  name,
+  id,
+  type,
+  disabled = false,
+  value,
+  onChange,
+  style,
+  required = false
+}) => {
   const [redBorder, setRedBorder] = useState(false);
+
+  const inputOnBlur = () => {
+    if (type === 'email') {
+      validateEmail(value) === null ? setRedBorder(true) : setRedBorder(false)
+      console.log(validateEmail(value))
+      return;
+    }
+    if (required && value.trim().length === 0) {
+      setRedBorder(true);
+      return;
+    } else {
+      setRedBorder(false);
+      return;
+    }
+
+  }
 
   return (
     <div className='input__wrapper'>
       <label htmlFor={id}>{label}</label>
       <input
         required={required}
-        style={redBorder ? {...style, borderColor: '#D91313', borderWidth: '3px'} : {...style}}
+        style={style}
         placeholder={placeholder}
         name={name ?? id}
         id={id}
@@ -31,19 +58,10 @@ const Input: React.FC<iInput> = ({ label, placeholder, name, id, type, disabled 
         disabled={disabled}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onBlur={() => {
-          if (required && value.trim().length === 0) {
-            setRedBorder(true);
-          } else {
-            setRedBorder(false);
-          }
-          if (type === 'email') {
-            validateEmail(value) === null ? setRedBorder(true) : setRedBorder(false)
-          }
-        }}
+        onBlur={inputOnBlur}
+        className={`${redBorder ? 'red-border' : ''}`}
       />
     </div>
-
   )
 };
 

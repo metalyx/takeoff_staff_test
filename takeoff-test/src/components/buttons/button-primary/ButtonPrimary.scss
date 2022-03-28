@@ -7,3 +7,11 @@
   height: 30px;
   cursor: pointer;
 }
+
+.button-primary__button.valid {
+  background-color: #2997FF;
+}
+
+.button-primary__button.invalid {
+  background-color: #A9A9A9;
+}

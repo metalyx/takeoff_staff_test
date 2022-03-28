@@ -6,12 +6,13 @@ interface iButtonPrimary {
   onClick: () => void;
   style?: React.CSSProperties;
   disabled?: boolean;
+  className?: string;
 };
 
-const ButtonPrimary: React.FC<iButtonPrimary> = ({ title, onClick, style, disabled }) => {
+const ButtonPrimary: React.FC<iButtonPrimary> = ({ title, onClick, style, disabled, className }) => {
   return (
     <button
-      className='button-primary__button'
+      className={`button-primary__button ${className}`}
       onClick={onClick}
       style={style}
       disabled={disabled}

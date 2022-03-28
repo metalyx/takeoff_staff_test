@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { iUser, iUserWithoutId } from '../../../redux/users/types/users';
 import { UsersActionsType, UsersActionTypes } from '../../../redux/users/UsersReducer';
+import { NETWORK_ERROR_OCCURED } from '../../../templates/templates';
 import Axios from '../../../utils/Axios';
 import { POST_USERS, PUT_USER } from '../../../utils/endpoints';
 import ButtonPrimary from '../../buttons/button-primary/ButtonPrimary';
@@ -281,7 +282,7 @@ const UserCardLarge: React.FC<iUserCardLarge> = ({ dispatch, user, resetToken, t
           onChange={setCompanyCatchPhrase}
         />
         {isNetworkError && (
-          <span style={{ color: 'red' }}>Network error is occured, check if json-server is up</span>
+          NETWORK_ERROR_OCCURED
         )}
         <ButtonPrimary
           title='Save changes'

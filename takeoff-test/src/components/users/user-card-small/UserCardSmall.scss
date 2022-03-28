@@ -14,3 +14,7 @@
 .user-card-small__wrapper:hover {
   background: lavender;
 }
+
+.user-card-small__wrapper.active {
+  background: lightgray;
+}

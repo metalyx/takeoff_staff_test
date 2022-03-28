@@ -5,7 +5,9 @@ import ButtonPrimary from '../../components/buttons/button-primary/ButtonPrimary
 import Input from '../../components/inputs/input/Input';
 import UserCardLarge from '../../components/users/user-card-large/UserCardLarge';
 import UserCardSmall from '../../components/users/user-card-small/UserCardSmall';
+import { iUser } from '../../redux/users/types/users';
 import { UsersActionsType, UsersInitialState, UsersReducer } from '../../redux/users/UsersReducer';
+import { NETWORK_ERROR_OCCURED } from '../../templates/templates';
 import Axios from '../../utils/Axios';
 import { DELETE_USER, GET_USERS } from '../../utils/endpoints';
 import './Users.scss';
@@ -76,16 +78,48 @@ const Users: React.FC<iUsersComponentProps> = ({ token, resetToken }) => {
     }
   }, [navigate, resetToken, state.isDeletingUser, state.selectedUserId])
 
+  const addUser = () => {
+    dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: !state.isAddingUser })
+    dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SELECT_USER, payload: null });
+  }
+
+  const editUser = () => {
+    dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: !state.isEditingUser })
+    dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
+  }
+
+  const deleteUser = () => {
+    dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: false })
+    dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: !state.isDeletingUser })
+    dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
+  }
+
+  const chooseCardClickAction = (user: iUser) => {
+    if (
+      (state.isEditingUser || state.isDeletingUser) && 
+      (state.selectedUserId === null || state.selectedUserId !== user.id)
+    ) {
+      dispatch({ type: UsersActionsType.SELECT_USER, payload: user.id })
+    } else {
+      dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
+    }
+  }
+
   return (
     <div className='users__wrapper'>
       {isNetworkError && (
-        <div>
-          <span style={{ color: 'red' }}>Network error is occured, please check if json-server is started.</span>
-        </div>
+        NETWORK_ERROR_OCCURED
       )}
       {isNetworkError === false && (
         <div className='users__buttons'>
-          <span className='buttons__description'>First toggle an action and then a card.</span>
+          <span className='buttons__description'>
+            First toggle an action and then a card.
+          </span>
           <div>
             <Input 
               value={search}
@@ -98,32 +132,17 @@ const Users: React.FC<iUsersComponentProps> = ({ token, resetToken }) => {
           <div className='buttons__wrapper'>
             <ButtonPrimary
               title='Add user'
-              onClick={() => {
-                dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: !state.isAddingUser })
-                dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SELECT_USER, payload: null });
-              }}
+              onClick={addUser}
               style={state.isAddingUser ? { background: 'green' } : {}}
             />
             <ButtonPrimary
               title='Edit user'
-              onClick={() => {
-                dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: !state.isEditingUser })
-                dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
-              }}
+              onClick={editUser}
               style={state.isEditingUser ? { background: 'green' } : {}}
             />
             <ButtonPrimary
               title='Delete user'
-              onClick={() => {
-                dispatch({ type: UsersActionsType.SET_IS_ADDING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SET_IS_EDITING_USER, payload: false })
-                dispatch({ type: UsersActionsType.SET_IS_DELETING_USER, payload: !state.isDeletingUser })
-                dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
-              }}
+              onClick={deleteUser}
               style={state.isDeletingUser ? { background: 'green' } : {}}
             />
           </div>
@@ -131,32 +150,29 @@ const Users: React.FC<iUsersComponentProps> = ({ token, resetToken }) => {
       )}
       <div className='users__columns'>
         <div className='users__left-column'>
-          {isNetworkError === false && state.users && state.users
+          {isNetworkError === false
+          && state.users !== null
+          && state.users
           .filter((usr) => usr.name.toLowerCase().indexOf(search.toLowerCase()) !== -1)
           .map(user => {
             return (
-              <UserCardSmall 
+              <UserCardSmall
                 id={user.id}
                 name={user.name}
                 email={user.email}
                 companyName={user.company.name}
-                onClick={() => {
-                  if (
-                    (state.isEditingUser || state.isDeletingUser) && 
-                    (state.selectedUserId === null || state.selectedUserId !== user.id)
-                  ) {
-                    dispatch({ type: UsersActionsType.SELECT_USER, payload: user.id })
-                  } else {
-                    dispatch({ type: UsersActionsType.SELECT_USER, payload: null })
-                  }
-                }}
-                style={state.selectedUserId === user.id ? { background: 'lightgray' } : {}}
+                onClick={() => chooseCardClickAction(user)}
+                className={state.selectedUserId === user.id ? 'active' : ''}
               />
             )
           })}
         </div>
         <div className='users__right-column'>
-          {isNetworkError === false && state.isEditingUser && state.users && state.selectedUserId && (
+          {isNetworkError === false
+          && state.isEditingUser
+          && state.users
+          && state.selectedUserId
+          && (
             <UserCardLarge
               user={state.users.filter(user => user.id === state.selectedUserId)[0]}
               dispatch={dispatch}
@@ -164,7 +180,9 @@ const Users: React.FC<iUsersComponentProps> = ({ token, resetToken }) => {
               type='edit'
             />
           )}
-          {isNetworkError === false && state.isAddingUser && (
+          {isNetworkError === false
+          && state.isAddingUser
+          && (
             <UserCardLarge
               dispatch={dispatch}
               resetToken={resetToken}

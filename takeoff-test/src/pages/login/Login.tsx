@@ -5,6 +5,7 @@ import ButtonPrimary from '../../components/buttons/button-primary/ButtonPrimary
 import Input from '../../components/inputs/input/Input';
 import Loader from '../../components/loader/Loader';
 import { AuthActions, AuthActionTypes } from '../../redux/auth/AuthReducer';
+import { INVALID_EMAIL_PASSWORD, NETWORK_ERROR_OCCURED } from '../../templates/templates';
 import { POST_LOGIN } from '../../utils/endpoints';
 import { validateEmail } from '../../utils/validateEmail';
 import './Login.scss';
@@ -93,10 +94,10 @@ const Login: React.FC<iLogin> = ({ token, dispatch }) => {
           placeholder='Password'
         />
         {isErrorAuth && (
-          <span style={{ color: 'red', display: 'block' }}>Invalid Email or password.</span>
+          INVALID_EMAIL_PASSWORD
         )}
         {isErrorNetwork && (
-          <span style={{ color: 'red', display: 'block' }}>Network error occured. Please, check if json-server is started.</span>
+          NETWORK_ERROR_OCCURED
         )}
         {isPending === false && (
           <div style={{ display: 'flex' }}>
@@ -104,13 +105,13 @@ const Login: React.FC<iLogin> = ({ token, dispatch }) => {
               title='Submit'
               onClick={() => logIn()}
               disabled={isValid === false}
-              style={isValid ? { backgroundColor: '#2997FF' } : { backgroundColor: '#A9A9A9' }}
+              className={isValid ? 'valid' : 'invalid'}
             />
             <ButtonPrimary
               title={`Show me email and password!`}
               onClick={() => setShowLoginPass(!showLoginPass)}
               disabled={isPending}
-              style={{ backgroundColor: '#2997FF' }}
+              className='valid'
             />
           </div>
         )}
